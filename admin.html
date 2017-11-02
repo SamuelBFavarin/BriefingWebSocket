@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Admin</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<h2>Palavras mais Usadas</h2>
+		<h4>"Qual recurso você mais utiliza no seu celular?"</h4>
+		<hr>
+		<div id="log"> </div>
+
+		<script>
+			var sock = new WebSocket("ws://localhost:5001");
+			var log = document.getElementById('log');
+
+			var words = new Array();
+			
+			sock.onmessage = function(event){	
+
+				var find = false;
+				for(var i=0; i<words.length; i++){
+					if(words[i].word === event.data){
+						words[i].qtd++;
+						find = true;
+					}
+				}
+				if(!find) words.push({"word" : event.data, "qtd" : 1});
+				printWords();
+			}
+
+			sock.onopen = function(){
+				var pin = 'pin:9999';
+				sock.send(pin);
+			}
+
+			function printWords(){
+				log.innerHTML = null;
+				for(var i=0; i<words.length; i++){
+					var size = words[i].qtd * 10;
+					var value = words[i].word;
+					var color = getColor(words[i].qtd);
+					log.innerHTML += '<div style="font-size:' +size+'px; color:'+color+'"> '+value+'</div>';
+				}
+			}
+
+			function getColor(number){
+				if(number < 2) return '#FBBABB';
+				else if(number > 0 && number <= 4) return '#FF9394';
+				else if(number > 4 && number <= 6) return '#FB6B6D';
+				else if(number > 6 && number <= 8) return '#FC5B5D';
+				else if(number > 8 && number <= 10) return '#FB2224';
+				else if(number > 10 && number <= 15) return '#FA0105';
+				else return '#650204';
+			}
+		</script>
+	</body>
+</html>

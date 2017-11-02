@@ -1,0 +1,39 @@
+<html>
+	<head>
+
+		<title>Cliente</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+
+		<div class="container">
+
+			<h2>Qual o resurso que você mais utiliza no seu celular?</h2>
+			<div class="form-group">
+			    <input type="text" placeholder="digite uma mensagem" class="form-control" id="text">
+				<button class="btn btn-success"> Enviar	</button>
+			</div>			
+			<div id="log"> </div>
+
+		</div>
+		
+		<script>
+			var sock = new WebSocket("ws://localhost:5001");
+			var log = document.getElementById('log');
+			
+			document.querySelector('button').onclick = function(){
+				var text = document.getElementById('text').value;
+				sock.send(text);
+				document.getElementById('text').value = null;
+				document.getElementById('text').placeholder = 'mesagem enviada';
+			}
+		</script>
+	</body>
+</html>
